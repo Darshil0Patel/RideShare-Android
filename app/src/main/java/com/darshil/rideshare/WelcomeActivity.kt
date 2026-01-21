@@ -24,14 +24,15 @@ class WelcomeActivity : AppCompatActivity() {
     private fun setupClickListeners() {
         binding.btnSignIn.setOnClickListener {
             // TODO: Navigate to SignInActivity (we'll create this next)
-//            Toast.makeText(this, "Sign In clicked - Coming in Day 3!", Toast.LENGTH_SHORT).show()
-            val intent = Intent(this, ProfileActivity::class.java)
+            Toast.makeText(this, "Sign In clicked - Coming in Day 3!", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, SignInActivity::class.java)
             startActivity(intent)
         }
 
         binding.btnSignUp.setOnClickListener {
             // TODO: Navigate to SignUpActivity
-            Toast.makeText(this, "Sign Up clicked - Coming in Day 3!", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, SignUpActivity::class.java)
+            startActivity(intent)
         }
     }
 }

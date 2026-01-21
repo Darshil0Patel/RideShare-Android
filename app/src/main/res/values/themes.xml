@@ -1,9 +1,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.RideShare" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    <style name="Theme.RideShare" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your colors here -->
+        <!-- The items you define here will override the defaults -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorSecondary">@color/text_secondary</item>
+        <!-- ... other color attributes ... -->
     </style>
-
-    <style name="Theme.RideShare" parent="Base.Theme.RideShare" />
 </resources>
