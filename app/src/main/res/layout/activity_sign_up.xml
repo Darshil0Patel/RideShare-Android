@@ -57,8 +57,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:hint="@string/hint_full_name"
+            android:textColorHint="@color/black"
             app:startIconDrawable="@drawable/ic_person"
-            app:startIconTint="@color/primary"
+            app:startIconTint="@color/black"
             app:endIconMode="clear_text"
             app:errorEnabled="true"
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
@@ -71,6 +72,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
+                android:textColor="@color/black"
                 android:maxLines="1" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -82,8 +84,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:hint="@string/hint_email"
+            android:textColorHint="@color/black"
             app:startIconDrawable="@drawable/ic_email"
-            app:startIconTint="@color/primary"
+            app:startIconTint="@color/black"
             app:endIconMode="clear_text"
             app:errorEnabled="true"
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
@@ -96,6 +99,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"
+                android:textColor="@color/black"
                 android:maxLines="1" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -107,8 +111,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:hint="@string/hint_phone"
+            android:textColorHint="@color/black"
             app:startIconDrawable="@drawable/ic_phone"
-            app:startIconTint="@color/primary"
+            app:startIconTint="@color/black"
             app:endIconMode="clear_text"
             app:errorEnabled="true"
             app:prefixText="+1 "
@@ -122,6 +127,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="phone"
+                android:textColor="@color/black"
                 android:maxLines="1" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -133,9 +139,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:hint="@string/hint_password"
+            android:textColorHint="@color/black"
             app:startIconDrawable="@drawable/ic_lock"
-            app:startIconTint="@color/primary"
+            app:startIconTint="@color/black"
             app:endIconMode="password_toggle"
+            app:endIconTint="@color/black"
             app:errorEnabled="true"
             app:helperText="At least 6 characters"
             app:helperTextEnabled="true"
@@ -149,6 +157,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
+                android:textColor="@color/black"
                 android:maxLines="1" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -160,9 +169,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:hint="@string/hint_confirm_password"
+            android:textColorHint="@color/black"
             app:startIconDrawable="@drawable/ic_lock"
-            app:startIconTint="@color/primary"
+            app:startIconTint="@color/black"
             app:endIconMode="password_toggle"
+            app:endIconTint="@color/black"
             app:errorEnabled="true"
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             app:layout_constraintTop_toBottomOf="@id/tilPassword"
@@ -174,6 +185,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
+                android:textColor="@color/black"
                 android:maxLines="1" />
 
         </com.google.android.material.textfield.TextInputLayout>

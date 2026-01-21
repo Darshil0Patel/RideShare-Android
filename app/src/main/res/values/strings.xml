@@ -48,6 +48,8 @@
     <string name="forgot_password_title">Forgot Password?</string>
     <string name="forgot_password_subtitle">Enter your email to reset password</string>
     <string name="btn_reset">Reset Password</string>
-    <string name="btn_back_sign_in">Back to Sign In</string>
+    <string name="btn_back_sign_in">back to sign in</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

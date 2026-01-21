@@ -32,8 +32,10 @@ class SignInActivity : AppCompatActivity() {
 
         // Forgot Password
         binding.btnForgotPassword.setOnClickListener {
-            Toast.makeText(this, "Forgot Password - Coming soon!", Toast.LENGTH_SHORT).show()
+//            Toast.makeText(this, "Forgot Password - Coming soon!", Toast.LENGTH_SHORT).show()
             // TODO: Navigate to ForgotPasswordActivity
+            val intent = Intent(this, ForgotPasswordActivity::class.java)
+            startActivity(intent)
         }
 
         // Sign Up Link
@@ -96,7 +98,7 @@ class SignInActivity : AppCompatActivity() {
             Toast.makeText(this, getString(R.string.login_success), Toast.LENGTH_SHORT).show()
 
             // Navigate to MainActivity (or HomeActivity)
-            val intent = Intent(this, ProfileActivity::class.java)
+            val intent = Intent(this, MainActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
             finish()

@@ -34,15 +34,29 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
+        <!-- Forgot Password Screen -->
+        <activity
+            android:name=".ForgotPasswordActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"
+            android:parentActivityName=".SignInActivity">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".SignInActivity" />
+
+        </activity>
+
+
         <!-- Profile Screen -->
         <activity
             android:name=".ProfileActivity"
             android:exported="false" />
 
         <!-- Main Activity -->
-<!--        <activity-->
-<!--            android:name=".MainActivity"-->
-<!--            android:exported="false" />-->
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
 
     </application>
 

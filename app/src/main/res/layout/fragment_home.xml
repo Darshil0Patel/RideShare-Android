@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
+
+    <!-- App Bar -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.Material3.Dark">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/primary"
+            app:title="RideShare"
+            app:titleTextColor="@color/white" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- Content -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <!-- Welcome Card -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cvWelcome"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="@color/primary"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:id="@+id/tvWelcome"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Welcome, John!"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Where would you like to go?"
+                        android:textSize="16sp"
+                        android:textColor="@color/white"
+                        android:alpha="0.9"
+                        android:layout_marginTop="4dp" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Quick Actions -->
+            <TextView
+                android:id="@+id/tvQuickActions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Quick Actions"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary"
+                android:layout_marginTop="24dp"
+                app:layout_constraintTop_toBottomOf="@id/cvWelcome"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <!-- Book Ride Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnBookRide"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:text="Book a Ride"
+                android:textAllCaps="false"
+                android:textSize="16sp"
+                app:icon="@drawable/ic_car"
+                app:iconGravity="textStart"
+                app:cornerRadius="8dp"
+                android:layout_marginTop="12dp"
+                app:layout_constraintTop_toBottomOf="@id/tvQuickActions"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <!-- Schedule Ride Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnScheduleRide"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:text="Schedule a Ride"
+                android:textAllCaps="false"
+                android:textSize="16sp"
+                app:icon="@drawable/ic_calendar"
+                app:iconGravity="textStart"
+                app:cornerRadius="8dp"
+                app:strokeColor="@color/primary"
+                app:strokeWidth="2dp"
+                android:layout_marginTop="12dp"
+                app:layout_constraintTop_toBottomOf="@id/btnBookRide"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <!-- Recent Rides Section -->
+            <TextView
+                android:id="@+id/tvRecentRides"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Recent Rides"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary"
+                android:layout_marginTop="24dp"
+                app:layout_constraintTop_toBottomOf="@id/btnScheduleRide"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <!-- Recent Rides RecyclerView (We'll implement in Day 5) -->
+            <TextView
+                android:id="@+id/tvNoRides"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No recent rides"
+                android:textSize="14sp"
+                android:textColor="@color/text_secondary"
+                android:layout_marginTop="12dp"
+                app:layout_constraintTop_toBottomOf="@id/tvRecentRides"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
