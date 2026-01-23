@@ -6,25 +6,45 @@ import android.os.Handler
 import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import com.darshil.rideshare.databinding.ActivitySplashBinding
+import com.darshil.rideshare.utils.PreferencesManager
 
 class SplashActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySplashBinding
-    private val splashTimeOut: Long = 2500 // 2.5 seconds
+    private lateinit var prefsManager: PreferencesManager
+    private val splashTimeOut: Long = 2500
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Hide action bar
         supportActionBar?.hide()
 
-        // Navigate to Welcome screen after delay
+        prefsManager = PreferencesManager(this)
+
         Handler(Looper.getMainLooper()).postDelayed({
-            val intent = Intent(this, WelcomeActivity::class.java)
-            startActivity(intent)
-            finish() // Close splash so user can't go back to it
+            navigateToNextScreen()
         }, splashTimeOut)
+    }
+
+    private fun navigateToNextScreen() {
+        val intent = when {
+            // User is logged in → Go to MainActivity
+            prefsManager.isLoggedIn -> {
+                Intent(this, MainActivity::class.java)
+            }
+            // User hasn't seen onboarding → Show onboarding
+//            !prefsManager.hasSeenOnboarding -> {
+//                Intent(this, OnboardingActivity::class.java)
+//            }
+            // Default → Show welcome screen
+            else -> {
+                Intent(this, WelcomeActivity::class.java)
+            }
+        }
+
+        startActivity(intent)
+        finish()
     }
 }

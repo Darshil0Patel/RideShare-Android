@@ -1,12 +1,18 @@
 package com.darshil.rideshare
 
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
-import android.util.Patterns
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.darshil.rideshare.databinding.ActivitySignUpBinding
+import com.darshil.rideshare.utils.ValidationHelper
+import com.darshil.rideshare.utils.ValidationResult
+import com.darshil.rideshare.utils.ValidationTextWatcher
 
 class SignUpActivity : AppCompatActivity() {
 
@@ -19,94 +25,209 @@ class SignUpActivity : AppCompatActivity() {
 
         supportActionBar?.hide()
 
+        setupRealtimeValidation()
+        setupPasswordStrengthIndicator()
         setupClickListeners()
     }
 
+    private fun setupRealtimeValidation() {
+        // Real-time name validation
+        binding.etFullName.addTextChangedListener(
+            ValidationTextWatcher(binding.tilFullName) { name ->
+                ValidationHelper.validateName(name)
+            }
+        )
+
+        // Real-time email validation
+        binding.etEmail.addTextChangedListener(
+            ValidationTextWatcher(binding.tilEmail) { email ->
+                ValidationHelper.validateEmail(email)
+            }
+        )
+
+        // Real-time phone validation
+        binding.etPhone.addTextChangedListener(
+            ValidationTextWatcher(binding.tilPhone) { phone ->
+                ValidationHelper.validatePhone(phone)
+            }
+        )
+
+        // Real-time password validation
+        binding.etPassword.addTextChangedListener(
+            ValidationTextWatcher(binding.tilPassword) { password ->
+                ValidationHelper.validateStrongPassword(password)
+            }
+        )
+
+        // Real-time confirm password validation
+        binding.etConfirmPassword.addTextChangedListener(
+            ValidationTextWatcher(binding.tilConfirmPassword) { confirmPassword ->
+                val password = binding.etPassword.text.toString()
+                ValidationHelper.validatePasswordMatch(password, confirmPassword)
+            }
+        )
+    }
+
+    private fun setupPasswordStrengthIndicator() {
+        binding.etPassword.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun afterTextChanged(s: Editable?) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val password = s.toString()
+
+                // Show/hide indicator
+                if (password.isEmpty()) {
+                    binding.llPasswordStrength.visibility = View.GONE
+                    return
+                } else {
+                    binding.llPasswordStrength.visibility = View.VISIBLE
+                }
+
+                // Calculate strength
+                val strength = calculatePasswordStrength(password)
+
+                // Update progress
+                binding.pbStrength.progress = strength
+
+                // Update color and text
+                when (strength) {
+                    in 0..25 -> {
+                        binding.tvStrengthLabel.text = "Weak"
+                        binding.tvStrengthLabel.setTextColor(Color.RED)
+                        binding.pbStrength.progressTintList = ColorStateList.valueOf(Color.RED)
+                    }
+                    in 26..50 -> {
+                        binding.tvStrengthLabel.text = "Fair"
+                        binding.tvStrengthLabel.setTextColor(Color.parseColor("#FF6B00")) // Orange
+                        binding.pbStrength.progressTintList = ColorStateList.valueOf(Color.parseColor("#FF6B00"))
+                    }
+                    in 51..75 -> {
+                        binding.tvStrengthLabel.text = "Good"
+                        binding.tvStrengthLabel.setTextColor(Color.parseColor("#FFB300")) // Yellow
+                        binding.pbStrength.progressTintList = ColorStateList.valueOf(Color.parseColor("#FFB300"))
+                    }
+                    in 76..100 -> {
+                        binding.tvStrengthLabel.text = "Strong"
+                        binding.tvStrengthLabel.setTextColor(Color.GREEN)
+                        binding.pbStrength.progressTintList = ColorStateList.valueOf(Color.GREEN)
+                    }
+                }
+            }
+        })
+    }
+
+    private fun calculatePasswordStrength(password: String): Int {
+        var score = 0
+
+        // Length check (0-25 points)
+        when {
+            password.length >= 12 -> score += 25
+            password.length >= 8 -> score += 20
+            password.length >= 6 -> score += 10
+            else -> score += 5
+        }
+
+        // Uppercase letter (25 points)
+        if (password.any { it.isUpperCase() }) {
+            score += 25
+        }
+
+        // Lowercase letter (25 points)
+        if (password.any { it.isLowerCase() }) {
+            score += 25
+        }
+
+        // Digit (25 points)
+        if (password.any { it.isDigit() }) {
+            score += 25
+        }
+
+        // Special character (25 points) - FIXED REGEX
+        if (password.any { "!@#$%^&*(),.?\":{}|<>".contains(it) }) {
+            score += 25
+        }
+
+        // Bonus: Mix of all types
+        val hasUpper = password.any { it.isUpperCase() }
+        val hasLower = password.any { it.isLowerCase() }
+        val hasDigit = password.any { it.isDigit() }
+        val hasSpecial = password.any { "!@#$%^&*(),.?\":{}|<>".contains(it) }
+
+        if (hasUpper && hasLower && hasDigit && hasSpecial) {
+            score = minOf(100, score + 10)  // Bonus but cap at 100
+        }
+
+        return minOf(score, 100)  // Cap at 100
+    }
+
     private fun setupClickListeners() {
-        // Register Button
         binding.btnRegister.setOnClickListener {
-            if (validateInputs()) {
+            if (validateAllInputs()) {
                 performRegistration()
             }
         }
 
-        // Sign In Link
         binding.tvSignIn.setOnClickListener {
-            finish() // Go back to SignInActivity
+            finish()
         }
     }
 
-    private fun validateInputs(): Boolean {
+    private fun validateAllInputs(): Boolean {
         val fullName = binding.etFullName.text.toString().trim()
         val email = binding.etEmail.text.toString().trim()
         val phone = binding.etPhone.text.toString().trim()
         val password = binding.etPassword.text.toString()
         val confirmPassword = binding.etConfirmPassword.text.toString()
 
-        // Reset errors
-        binding.tilFullName.error = null
-        binding.tilEmail.error = null
-        binding.tilPhone.error = null
-        binding.tilPassword.error = null
-        binding.tilConfirmPassword.error = null
-
         // Validate full name
-        if (fullName.isEmpty()) {
-            binding.tilFullName.error = getString(R.string.error_empty_name)
-            binding.etFullName.requestFocus()
-            return false
+        when (val result = ValidationHelper.validateName(fullName)) {
+            is ValidationResult.Error -> {
+                binding.tilFullName.error = result.message
+                binding.etFullName.requestFocus()
+                return false
+            }
+            is ValidationResult.Success -> binding.tilFullName.error = null
         }
 
         // Validate email
-        if (email.isEmpty()) {
-            binding.tilEmail.error = getString(R.string.error_empty_email)
-            binding.etEmail.requestFocus()
-            return false
-        }
-
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            binding.tilEmail.error = getString(R.string.error_invalid_email)
-            binding.etEmail.requestFocus()
-            return false
+        when (val result = ValidationHelper.validateEmail(email)) {
+            is ValidationResult.Error -> {
+                binding.tilEmail.error = result.message
+                binding.etEmail.requestFocus()
+                return false
+            }
+            is ValidationResult.Success -> binding.tilEmail.error = null
         }
 
         // Validate phone
-        if (phone.isEmpty()) {
-            binding.tilPhone.error = getString(R.string.error_empty_phone)
-            binding.etPhone.requestFocus()
-            return false
-        }
-
-        if (phone.length < 10) {
-            binding.tilPhone.error = getString(R.string.error_invalid_phone)
-            binding.etPhone.requestFocus()
-            return false
+        when (val result = ValidationHelper.validatePhone(phone)) {
+            is ValidationResult.Error -> {
+                binding.tilPhone.error = result.message
+                binding.etPhone.requestFocus()
+                return false
+            }
+            is ValidationResult.Success -> binding.tilPhone.error = null
         }
 
         // Validate password
-        if (password.isEmpty()) {
-            binding.tilPassword.error = getString(R.string.error_empty_password)
-            binding.etPassword.requestFocus()
-            return false
-        }
-
-        if (password.length < 6) {
-            binding.tilPassword.error = getString(R.string.error_short_password)
-            binding.etPassword.requestFocus()
-            return false
+        when (val result = ValidationHelper.validateStrongPassword(password)) {
+            is ValidationResult.Error -> {
+                binding.tilPassword.error = result.message
+                binding.etPassword.requestFocus()
+                return false
+            }
+            is ValidationResult.Success -> binding.tilPassword.error = null
         }
 
         // Validate confirm password
-        if (confirmPassword.isEmpty()) {
-            binding.tilConfirmPassword.error = "Please confirm your password"
-            binding.etConfirmPassword.requestFocus()
-            return false
-        }
-
-        if (password != confirmPassword) {
-            binding.tilConfirmPassword.error = getString(R.string.error_passwords_dont_match)
-            binding.etConfirmPassword.requestFocus()
-            return false
+        when (val result = ValidationHelper.validatePasswordMatch(password, confirmPassword)) {
+            is ValidationResult.Error -> {
+                binding.tilConfirmPassword.error = result.message
+                binding.etConfirmPassword.requestFocus()
+                return false
+            }
+            is ValidationResult.Success -> binding.tilConfirmPassword.error = null
         }
 
         return true
@@ -118,16 +239,13 @@ class SignUpActivity : AppCompatActivity() {
         val phone = binding.etPhone.text.toString().trim()
         val password = binding.etPassword.text.toString()
 
-        // Show loading
         setLoading(true)
 
         // TODO: Implement actual registration (Day 13 - Firebase)
-        // For now, simulate network delay
         binding.root.postDelayed({
             setLoading(false)
 
-            // Simulate successful registration
-            Toast.makeText(this, getString(R.string.registration_success), Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Registration successful!", Toast.LENGTH_SHORT).show()
 
             // Navigate to SignInActivity
             val intent = Intent(this, SignInActivity::class.java)
@@ -135,7 +253,7 @@ class SignUpActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
 
-        }, 2000) // 2 second delay
+        }, 2000)
     }
 
     private fun setLoading(isLoading: Boolean) {
@@ -143,7 +261,6 @@ class SignUpActivity : AppCompatActivity() {
             binding.btnRegister.visibility = View.INVISIBLE
             binding.progressBar.visibility = View.VISIBLE
             binding.btnRegister.isEnabled = false
-            // Disable all inputs
             binding.etFullName.isEnabled = false
             binding.etEmail.isEnabled = false
             binding.etPhone.isEnabled = false
@@ -153,7 +270,6 @@ class SignUpActivity : AppCompatActivity() {
             binding.btnRegister.visibility = View.VISIBLE
             binding.progressBar.visibility = View.GONE
             binding.btnRegister.isEnabled = true
-            // Enable all inputs
             binding.etFullName.isEnabled = true
             binding.etEmail.isEnabled = true
             binding.etPhone.isEnabled = true

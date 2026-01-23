@@ -145,7 +145,7 @@
             app:endIconMode="password_toggle"
             app:endIconTint="@color/black"
             app:errorEnabled="true"
-            app:helperText="At least 6 characters"
+            app:helperText="At least 8 characters"
             app:helperTextEnabled="true"
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             app:layout_constraintTop_toBottomOf="@id/tilPhone"
@@ -162,7 +162,39 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Confirm Password Input -->
+        <!-- Password Strength Indicator (Outside TextInputLayout) -->
+        <LinearLayout
+            android:id="@+id/llPasswordStrength"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="8dp"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/tilPassword"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ProgressBar
+                android:id="@+id/pbStrength"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:max="100"
+                android:progress="0"
+                android:progressTint="@color/text_secondary" />
+
+            <TextView
+                android:id="@+id/tvStrengthLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Strength: None"
+                android:textSize="12sp"
+                android:textColor="@color/text_secondary"
+                android:layout_marginTop="4dp" />
+
+        </LinearLayout>
+
+        <!-- Confirm Password Input (Update constraint) -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilConfirmPassword"
             android:layout_width="0dp"
@@ -176,7 +208,7 @@
             app:endIconTint="@color/black"
             app:errorEnabled="true"
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-            app:layout_constraintTop_toBottomOf="@id/tilPassword"
+            app:layout_constraintTop_toBottomOf="@id/llPasswordStrength"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
@@ -189,7 +221,6 @@
                 android:maxLines="1" />
 
         </com.google.android.material.textfield.TextInputLayout>
-
         <!-- Terms Agreement -->
         <TextView
             android:id="@+id/tvTerms"

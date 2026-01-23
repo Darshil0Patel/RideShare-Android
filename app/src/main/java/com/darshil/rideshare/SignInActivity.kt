@@ -2,15 +2,18 @@ package com.darshil.rideshare
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Patterns
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.darshil.rideshare.databinding.ActivitySignInBinding
+import com.darshil.rideshare.utils.PreferencesManager
+import com.darshil.rideshare.utils.ValidationHelper
+import com.darshil.rideshare.utils.ValidationResult
 
 class SignInActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySignInBinding
+    private lateinit var prefsManager: PreferencesManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,26 +22,33 @@ class SignInActivity : AppCompatActivity() {
 
         supportActionBar?.hide()
 
+        prefsManager = PreferencesManager(this)
+
+        // Load saved email if "Remember Me" was checked
+        loadSavedCredentials()
+
         setupClickListeners()
     }
 
+    private fun loadSavedCredentials() {
+        if (prefsManager.rememberMe) {
+            binding.etEmail.setText(prefsManager.userEmail)
+            binding.cbRememberMe.isChecked = true
+        }
+    }
+
     private fun setupClickListeners() {
-        // Login Button
         binding.btnLogin.setOnClickListener {
             if (validateInputs()) {
                 performLogin()
             }
         }
 
-        // Forgot Password
         binding.btnForgotPassword.setOnClickListener {
-//            Toast.makeText(this, "Forgot Password - Coming soon!", Toast.LENGTH_SHORT).show()
-            // TODO: Navigate to ForgotPasswordActivity
             val intent = Intent(this, ForgotPasswordActivity::class.java)
             startActivity(intent)
         }
 
-        // Sign Up Link
         binding.tvSignUp.setOnClickListener {
             val intent = Intent(this, SignUpActivity::class.java)
             startActivity(intent)
@@ -54,29 +64,23 @@ class SignInActivity : AppCompatActivity() {
         binding.tilPassword.error = null
 
         // Validate email
-        if (email.isEmpty()) {
-            binding.tilEmail.error = getString(R.string.error_empty_email)
-            binding.etEmail.requestFocus()
-            return false
-        }
-
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            binding.tilEmail.error = getString(R.string.error_invalid_email)
-            binding.etEmail.requestFocus()
-            return false
+        when (val result = ValidationHelper.validateEmail(email)) {
+            is ValidationResult.Error -> {
+                binding.tilEmail.error = result.message
+                binding.etEmail.requestFocus()
+                return false
+            }
+            is ValidationResult.Success -> {}
         }
 
         // Validate password
-        if (password.isEmpty()) {
-            binding.tilPassword.error = getString(R.string.error_empty_password)
-            binding.etPassword.requestFocus()
-            return false
-        }
-
-        if (password.length < 6) {
-            binding.tilPassword.error = getString(R.string.error_short_password)
-            binding.etPassword.requestFocus()
-            return false
+        when (val result = ValidationHelper.validatePassword(password)) {
+            is ValidationResult.Error -> {
+                binding.tilPassword.error = result.message
+                binding.etPassword.requestFocus()
+                return false
+            }
+            is ValidationResult.Success -> {}
         }
 
         return true
@@ -86,24 +90,33 @@ class SignInActivity : AppCompatActivity() {
         val email = binding.etEmail.text.toString().trim()
         val password = binding.etPassword.text.toString()
 
-        // Show loading
         setLoading(true)
 
         // TODO: Implement actual authentication (Day 13 - Firebase)
-        // For now, simulate network delay
         binding.root.postDelayed({
             setLoading(false)
 
             // Simulate successful login
-            Toast.makeText(this, getString(R.string.login_success), Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show()
 
-            // Navigate to MainActivity (or HomeActivity)
+            // Save user session
+            prefsManager.saveUserSession(
+                userId = "user123",
+                name = "John Doe",
+                email = email,
+                phone = "+1234567890"
+            )
+
+            // Save "Remember Me" preference
+            prefsManager.rememberMe = binding.cbRememberMe.isChecked
+
+            // Navigate to MainActivity
             val intent = Intent(this, MainActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
             finish()
 
-        }, 2000) // 2 second delay
+        }, 2000)
     }
 
     private fun setLoading(isLoading: Boolean) {

@@ -10,11 +10,13 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.darshil.rideshare.WelcomeActivity
 import com.darshil.rideshare.databinding.FragmentProfileBinding
+import com.darshil.rideshare.utils.PreferencesManager
 
 class ProfileFragment : Fragment() {
 
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
+    private lateinit var prefsManager: PreferencesManager
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,14 +30,16 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        prefsManager = PreferencesManager(requireContext())
+
         setupViews()
         setupClickListeners()
     }
 
     private fun setupViews() {
-        // TODO: Load user data from SharedPreferences or Database
-        binding.tvName.text = "John Doe"
-        binding.tvEmail.text = "john.doe@example.com"
+        // Load user data from SharedPreferences
+        binding.tvName.text = prefsManager.userName ?: "User"
+        binding.tvEmail.text = prefsManager.userEmail ?: "email@example.com"
     }
 
     private fun setupClickListeners() {
@@ -68,7 +72,9 @@ class ProfileFragment : Fragment() {
     }
 
     private fun performLogout() {
-        // TODO: Clear user session (SharedPreferences, Database)
+        // Clear user session
+        prefsManager.clearUserSession()
+
         Toast.makeText(requireContext(), "Logged out successfully", Toast.LENGTH_SHORT).show()
 
         // Navigate to WelcomeActivity
